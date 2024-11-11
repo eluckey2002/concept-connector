@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Sparkles, Wand2, Info } from 'lucide-react';
 import {
   Tooltip,
@@ -8,6 +8,8 @@ import {
 } from "@/components/DiscoverButton/tooltip";
 import { GameMode } from '../../types/types';
 import { InputField } from '../InputField';
+import { validateConcept } from '../../utils/validation';
+import { useGameStore } from '@/stores/gameStore';
 
 interface ModeButtonProps {
   mode: string;
@@ -18,12 +20,7 @@ interface ModeButtonProps {
 }
 
 interface ButtonAreaModesProps {
-  setGameMode: React.Dispatch<React.SetStateAction<GameMode>>;
   onDiscover: () => void;
-  startConcept: string; 
-  setStartConcept: React.Dispatch<React.SetStateAction<string>>; 
-  endConcept: string; 
-  setEndConcept: React.Dispatch<React.SetStateAction<string>>; 
 }
 
 const ModeButton: React.FC<ModeButtonProps> = ({ 
@@ -80,21 +77,30 @@ const getTooltipContent = (mode: string): string => {
   return tooltips[mode] || 'Select this mode';
 };
 
-const ButtonAreaModes: React.FC<ButtonAreaModesProps> = ({ 
-  setGameMode, 
-  onDiscover, 
-  startConcept, 
-  setStartConcept, 
-  endConcept, 
-  setEndConcept 
-}) => {
-  const [activeMode, setActiveMode] = React.useState<string>('Classic');
+const ButtonAreaModes: React.FC<ButtonAreaModesProps> = ({ onDiscover }) => {
+  const {
+    startConcept,
+    endConcept,
+    gameMode,
+    validation,
+    setStartConcept,
+    setEndConcept,
+    setGameMode
+  } = useGameStore();
 
   const modes: string[] = [
     'Classic', 'Academic', 'Historical', 'Pop Culture', 'Invention',
     'Geographic', 'Wordplay', 'Cause & Effect', 'Metaphor', 'Conspiracy Theory',
     'AI Choice'
   ];
+
+  const handleConceptChange = (type: 'start' | 'end', value: string) => {
+    if (type === 'start') {
+      setStartConcept(value);
+    } else {
+      setEndConcept(value);
+    }
+  };
 
   return (
     <TooltipProvider>
@@ -104,13 +110,17 @@ const ButtonAreaModes: React.FC<ButtonAreaModesProps> = ({
           <div className="mb-8 flex space-x-4">
             <InputField 
               label="Starting Concept"
-              value={startConcept} // Bind value to state
-              onChange={(e) => setStartConcept(e.target.value)} // Update state on change
+              value={startConcept}
+              onChange={(e) => handleConceptChange('start', e.target.value)}
+              error={validation.startConcept ? 'Invalid input' : undefined}
+              aria-invalid={validation.startConcept}
             />
             <InputField 
               label="Ending Concept"
-              value={endConcept} // Bind value to state
-              onChange={(e) => setEndConcept(e.target.value)} // Update state on change
+              value={endConcept}
+              onChange={(e) => handleConceptChange('end', e.target.value)}
+              error={validation.endConcept ? 'Invalid input' : undefined}
+              aria-invalid={validation.endConcept}
             />
           </div>
 
@@ -136,20 +146,18 @@ const ButtonAreaModes: React.FC<ButtonAreaModesProps> = ({
                   <ModeButton
                     key={mode}
                     mode={mode}
-                    isActive={mode === activeMode}
+                    isActive={mode === gameMode}
                     onClick={() => {
-                      setActiveMode(mode);
-                      setGameMode(mode as GameMode); // Update game mode
+                      setGameMode(mode as GameMode);
                     }}
                   />
                 ))}
                 
                 <ModeButton
                   mode="AI Choice"
-                  isActive={activeMode === 'AI Choice'}
+                  isActive={gameMode === 'AI Choice'}
                   onClick={() => {
-                    setActiveMode('AI Choice');
-                    setGameMode('AI Choice' as GameMode); // Update game mode
+                    setGameMode('AI Choice');
                   }}
                   icon={Sparkles}
                   isSpecial

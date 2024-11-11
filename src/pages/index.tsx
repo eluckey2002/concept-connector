@@ -4,39 +4,53 @@ import { ConnectionCardd } from '../components/ConnectionCard/ConnectionCardd';
 import ButtonAreaModes from '../components/DiscoverButton/DiscoverGameModes';
 import { Connection, GameMode } from '../types/types';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { sendMessage } from '../services/claude';
+import { conceptConnectorAPI } from '../services/api';
+import { APIError } from '../services/claude';
+import { useGameStore } from '@/stores/gameStore';
 
 export default function ConceptConnector() {
-  const [startConcept, setStartConcept] = useState('');
-  const [endConcept, setEndConcept] = useState('');
-  const [gameMode, setGameMode] = useState<GameMode>('Direct');
-  const [connections, setConnections] = useState<Connection[]>([]);
-  const [showConnections, setShowConnections] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false)
+  const {
+    connections,
+    isLoading,
+    error,
+    startConcept,
+    endConcept,
+    gameMode,
+    setConnections,
+    setLoading,
+    setError,
+    addToHistory,
+    resetState
+  } = useGameStore();
 
   const handleDiscover = async () => {
-    setIsLoading(true);
-    setError(null);
+    resetState();
+    setLoading(true);
+    
+    const controller = new AbortController();
+    
     try {
-      const parsedConnections = await sendMessage(startConcept, endConcept, gameMode);
-      console.log('Parsed Connections:', parsedConnections);
-
-      if (parsedConnections.length === 0) {
-        setError('No connections found. Please try different concepts.');
-        setShowConnections(false);
+      const newConnections = await conceptConnectorAPI.discoverConnections(
+        startConcept,
+        endConcept,
+        gameMode,
+        controller.signal
+      );
+      
+      setConnections(newConnections);
+      addToHistory();
+    } catch (err) {
+      if (err instanceof APIError) {
+        setError(err.message);
       } else {
-        setConnections(parsedConnections);
-        console.log('Updated Connections:', parsedConnections);
-        setShowConnections(true);
+        setError('An unexpected error occurred');
       }
-    } catch (error) {
-      setError('An error occurred while discovering connections.');
-      console.error('Error discovering connections:', error);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
-  };  
+
+    return () => controller.abort();
+  };
 
   return (
     <div className="min-h-screen bg-black p-6">
@@ -55,14 +69,8 @@ export default function ConceptConnector() {
         </div>
 
         {/* Replace Input Section with ButtonAreaModes */}
-        <ButtonAreaModes 
-        setGameMode={setGameMode} 
-        onDiscover={handleDiscover} 
-        startConcept={startConcept} // Pass startConcept
-        setStartConcept={setStartConcept} // Pass setStartConcept
-        endConcept={endConcept} // Pass endConcept
-        setEndConcept={setEndConcept} // Pass setEndConcept
-      />
+        <ButtonAreaModes onDiscover={handleDiscover} />
+     
 
         {/* Loading Spinner */}
         {isLoading && (

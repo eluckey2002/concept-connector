@@ -4,6 +4,9 @@ interface InputFieldProps {
   label: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  error?: string;
+  'aria-invalid'?: boolean;
+  'aria-describedby'?: string;
   placeholder?: string;
   type?: string;
   required?: boolean;
@@ -13,6 +16,9 @@ export const InputField: React.FC<InputFieldProps> = ({
   label,
   value,
   onChange,
+  error,
+  'aria-invalid': ariaInvalid,
+  'aria-describedby': ariaDescribedBy,
   placeholder,
   type = 'text',
   required = false,
@@ -25,6 +31,8 @@ export const InputField: React.FC<InputFieldProps> = ({
         type={type}
         value={value}
         onChange={onChange}
+        aria-invalid={ariaInvalid}
+        aria-describedby={error ? `${label}-error` : ariaDescribedBy}
         required={required}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
@@ -65,6 +73,16 @@ export const InputField: React.FC<InputFieldProps> = ({
         transition-all duration-300
         ${isFocused ? 'bg-purple-500' : 'bg-transparent'}
       `} />
+
+      {error && (
+        <div 
+          id={`${label}-error`}
+          className="text-red-400 text-sm mt-1"
+          role="alert"
+        >
+          {error}
+        </div>
+      )}
     </div>
   );
 };

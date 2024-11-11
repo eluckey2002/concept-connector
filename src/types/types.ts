@@ -6,9 +6,31 @@ export interface Connection {
 
 export type ClaudeResponse = Connection[];
 
-export type GameMode = 'Direct' | 'Historical' | 'Scientific' | 'Cultural' | 'Philosophical' | 'Metaphorical' | 'Technical' | 'Creative' | 'Educational' | 'AI Choice'; // Add GameMode type
+export interface APIResponse {
+    content: Array<{
+      type: string;
+      text: string;
+    }>;
+  }
+  
+  
+export type GameMode = 
+    | 'Classic' 
+    | 'Academic' 
+    | 'Historical' 
+    | 'Pop Culture' 
+    | 'Invention'
+    | 'Geographic' 
+    | 'Wordplay' 
+    | 'Cause & Effect' 
+    | 'Metaphor' 
+    | 'Conspiracy Theory'
+    | 'AI Choice';
 
 
+
+
+    
   /*
   const sampleConnections = [
     { title: "Coffee", description: "A caffeinated beverage made from roasted coffee beans" },
