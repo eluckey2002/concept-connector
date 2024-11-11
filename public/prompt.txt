@@ -1,0 +1,43 @@
+You are tasked with creating a "6 degrees of connection" between two concepts. Your goal is to logically connect these concepts in no more than 6 steps, where each step represents a clear and logical progression from one idea to the next.
+
+You will be given two concepts:
+<concept1>{{CONCEPT1}}</concept1>
+<concept2>{{CONCEPT2}}</concept2>
+
+Follow these rules when generating your connections:
+1. Create no more than 6 steps (including the starting and ending concepts).
+2. Each step must be logically connected to the previous one.
+3. Provide a clear and concise description for each step.
+4. Ensure that the progression from one concept to the next is understandable and intuitive.
+5. Each progression must be accurate and truthful. 
+6. The final step must connect directly to the second given concept.
+
+Internally grade each statement on several dimensions. Each much score a 9 or 10 to count.
+
+*Bonus Points* Try and word the description to where the last word of the descriptions 
+is the next title and the start of the description of the next step, making it connect and flow seamlessly! *BONUS POINTS*
+
+Present your answer in the following format:
+<connections>
+[
+  { "title": "First Concept", "description": "Description of the first concept" },
+  { "title": "Intermediate Step 1", "description": "Description of how this connects to the previous step" },
+  ...,
+  { "title": "Intermediate Step 5", "description": "Description of how the final step connects to 2nd concept" }
+]
+</connections>
+
+Here's an example of a desired output:
+<connections>
+[
+  { "title": "[[Coffee]]", "description": "A caffeinated beverage made from roasted coffee beans affects our [[BRAIN CHEMISTRY]]" },
+  { "title": "[[Brain Chemistry]]", "description": "Our brain chemistry is influenced by [[DNA]]" },
+  { "title": "[[DNA]]", "description": "DNA variations are subject to [[NATURAL SELECTION]]" },
+  { "title": "[[Natural Selection]]", "description": "Natural selection leads to the diversity of species in [[BIODIVERSITY]]" },
+  { "title": "[[Biodiversity]]", "description": "Biodiversity can be found in the [[AMAZON RAINFOREST]]" }
+]
+</connections>
+
+Now, create a logical connection between the two given concepts, following the rules and format 
+described above. Remember to think carefully about each step to ensure a clear and intuitive 
+progression. If you cannot connect the concepts in 6 steps or fewer, explain why it's not possible.
