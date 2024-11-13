@@ -8,8 +8,8 @@ import {
 } from "@/components/DiscoverButton/tooltip";
 import { GameMode } from '../../types/types';
 import { InputField } from '../InputField';
-import { validateConcept } from '../../utils/validation';
 import { useGameStore } from '@/stores/gameStore';
+import { validateConcept } from '@/utils/validation';
 
 interface ModeButtonProps {
   mode: string;
@@ -82,11 +82,15 @@ const ButtonAreaModes: React.FC<ButtonAreaModesProps> = ({ onDiscover }) => {
     startConcept,
     endConcept,
     gameMode,
-    validation,
     setStartConcept,
     setEndConcept,
     setGameMode
   } = useGameStore();
+
+  const validation = {
+    startConcept: !validateConcept(startConcept),
+    endConcept: !validateConcept(endConcept),
+  };
 
   const modes: string[] = [
     'Classic', 'Academic', 'Historical', 'Pop Culture', 'Invention',

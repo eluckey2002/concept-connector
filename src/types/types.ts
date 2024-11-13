@@ -4,7 +4,23 @@ export interface Connection {
   description: string;
 }
 
-export type ClaudeResponse = Connection[];
+export interface IntroductoryCommentary {
+    commentary: string;
+}
+
+export interface CompletedCommentary {
+    commentary: string;
+}
+
+
+
+export type ClaudeResponse = 
+ {
+    introductoryCommentary: IntroductoryCommentary;
+    connections: Connection[];
+    completedCommentary: CompletedCommentary;
+   
+}
 
 export interface APIResponse {
     content: Array<{
@@ -44,3 +60,20 @@ export type GameMode =
   */
 
   //
+  export interface AnimationConfig {
+    initial: {
+      opacity: number;
+      y: number;
+      scale: number;
+    };
+    animate: {
+      opacity: number;
+      y: number;
+      scale: number;
+    };
+    transition: {
+      duration: number;
+      delay: number;
+      ease: string;
+    };
+  } 

@@ -32,7 +32,7 @@ export const ConnectionCardContent: React.FC<ConnectionCardContentProps> = ({
       </div>
 
       {/* Title and Description */}
-      <div className="flex-1 pt-1">
+      <div className="flex-1 pt-0 pr-6">
         <h3 className={`
           text-center
           font-bold text-3xl mb-0.5
