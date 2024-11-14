@@ -1,7 +1,7 @@
 import React from 'react';
 import { ConnectionCardContent } from './ConnectionCardContent';
 import { motion } from 'framer-motion';
-import { AnimationConfig } from '@/types/types';
+import { AnimationConfig } from '../../types/types';
 
 interface ConnectionCardProps {
   number: number;

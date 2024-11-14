@@ -5,11 +5,13 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/DiscoverButton/tooltip";
+} from "@/components/common/tooltip";
 import { GameMode } from '../../types/types';
-import { InputField } from '../InputField';
+import { InputField } from '@/components/common/InputField';
 import { useGameStore } from '@/stores/gameStore';
 import { validateConcept } from '@/utils/validation';
+import { Button } from '@/components/common/Button';
+import { ErrorMessage } from '@/components/DiscoverButton/ErrorMessage';
 
 interface ModeButtonProps {
   mode: string;
@@ -20,7 +22,10 @@ interface ModeButtonProps {
 }
 
 interface ButtonAreaModesProps {
+  startConcept: string;
+  endConcept: string;
   onDiscover: () => void;
+  error?: string;
 }
 
 const ModeButton: React.FC<ModeButtonProps> = ({ 
@@ -33,24 +38,14 @@ const ModeButton: React.FC<ModeButtonProps> = ({
   <TooltipProvider delayDuration={300}>
     <Tooltip>
       <TooltipTrigger asChild>
-        <button
+        <Button
+          variant={isSpecial ? 'special' : 'mode'}
           onClick={onClick}
-          className={`
-            px-3 py-1.5 rounded-md text-sm whitespace-nowrap transition-all duration-200
-            flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-purple-500/50
-            transform hover:scale-105 active:scale-95
-            ${isActive 
-              ? 'bg-purple-600/30 text-purple-300 border border-purple-500 shadow-lg shadow-purple-500/20' 
-              : isSpecial
-                ? 'bg-gray-800/50 text-purple-300 border border-purple-500/30 hover:bg-gray-700/80'
-                : 'bg-gray-800 text-gray-400 hover:bg-gray-700/80'
-            }
-          `}
-          type="button"
+          icon={Icon}
+          isActive={isActive}
         >
-          {Icon && <Icon className="w-3.5 h-3.5" />}
           {mode}
-        </button>
+        </Button>
       </TooltipTrigger>
       <TooltipContent className="border-gray-700">
         <p className="text-sm">{getTooltipContent(mode)}</p>
@@ -77,10 +72,18 @@ const getTooltipContent = (mode: string): string => {
   return tooltips[mode] || 'Select this mode';
 };
 
-const ButtonAreaModes: React.FC<ButtonAreaModesProps> = ({ onDiscover }) => {
+const ButtonAreaModes: React.FC<ButtonAreaModesProps> = ({ 
+  startConcept, 
+  endConcept,
+  onDiscover,
+  error
+}) => {
+  const [isDirty, setIsDirty] = useState<{start: boolean, end: boolean}>({
+    start: false,
+    end: false
+  });
+
   const {
-    startConcept,
-    endConcept,
     gameMode,
     setStartConcept,
     setEndConcept,
@@ -88,22 +91,33 @@ const ButtonAreaModes: React.FC<ButtonAreaModesProps> = ({ onDiscover }) => {
   } = useGameStore();
 
   const validation = {
-    startConcept: !validateConcept(startConcept),
-    endConcept: !validateConcept(endConcept),
+    startConcept: isDirty.start && !validateConcept(startConcept),
+    endConcept: isDirty.end && !validateConcept(endConcept),
   };
 
-  const modes: string[] = [
+  const modes: GameMode[] = [
     'Classic', 'Academic', 'Historical', 'Pop Culture', 'Invention',
-    'Geographic', 'Wordplay', 'Cause & Effect', 'Metaphor', 'Conspiracy Theory',
-    'AI Choice'
+    'Geographic', 'Wordplay', 'Cause & Effect', 'Metaphor', 'Conspiracy Theory'
   ];
 
   const handleConceptChange = (type: 'start' | 'end', value: string) => {
+    setIsDirty(prev => ({
+      ...prev,
+      [type]: true
+    }));
     if (type === 'start') {
       setStartConcept(value);
     } else {
       setEndConcept(value);
     }
+  };
+
+  const getValidationError = (): string => {
+    if (!isDirty.start && !isDirty.end) return ''; // Don't show errors initially
+    if (validation.startConcept) return 'Please enter a valid starting concept';
+    if (validation.endConcept) return 'Please enter a valid ending concept';
+    if (!gameMode) return 'Please select a connection mode';
+    return error || '';
   };
 
   return (
@@ -151,49 +165,43 @@ const ButtonAreaModes: React.FC<ButtonAreaModesProps> = ({ onDiscover }) => {
                     key={mode}
                     mode={mode}
                     isActive={mode === gameMode}
-                    onClick={() => {
-                      setGameMode(mode as GameMode);
-                    }}
+                    onClick={() => setGameMode(mode)}
                   />
                 ))}
                 
                 <ModeButton
                   mode="AI Choice"
                   isActive={gameMode === 'AI Choice'}
-                  onClick={() => {
-                    setGameMode('AI Choice');
-                  }}
+                  onClick={() => setGameMode('AI Choice')}
                   icon={Sparkles}
                   isSpecial
                 />
               </div>
             </div>
 
+            {/* Add ErrorMessage component before the action buttons */}
+            <ErrorMessage message={getValidationError()} />
+            
             {/* Action buttons */}
             <div className="flex gap-3">
-              <button 
-                type="button"
+              <Button
+                variant="primary"
                 onClick={onDiscover}
                 disabled={!startConcept || !endConcept}
-                className={`flex-1 ${startConcept && endConcept ? 'bg-purple-600 hover:bg-purple-700' : 'bg-gray-500'} text-white py-3 px-4 rounded-lg 
-                  transition-all duration-200 font-medium
-                  transform ${startConcept && endConcept ? 'hover:scale-105 active:scale-95' : ''} shadow-lg shadow-purple-600/20
-                  focus:outline-none focus:ring-2 focus:ring-purple-500/50`}
+                className="flex-1"
               >
                 Discover Connection
-              </button>
+              </Button>
               
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button 
-                    type="button"
-                    className="px-4 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg 
-                      transition-all duration-200 group transform hover:scale-105 active:scale-95
-                      focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  <Button
+                    variant="secondary"
+                    icon={Wand2}
+                    className="group"
                   >
-                    <Wand2 className="w-5 h-5 text-purple-400 group-hover:text-purple-300 
-                      transition-colors duration-200" />
-                  </button>
+                    <Wand2 className="w-5 h-5 text-purple-400 group-hover:text-purple-300" />
+                  </Button>
                 </TooltipTrigger>
                 <TooltipContent className="border-gray-700">
                   <p className="text-sm">Generate random concepts and discover their connection</p>

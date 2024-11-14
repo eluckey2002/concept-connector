@@ -1,4 +1,5 @@
-export const validateConcept = (concept: string): boolean => {
+export const validateConcept = (concept?: string): boolean => {
+  if (!concept) return false;
   if (!concept.trim()) return false;
   if (concept.length > 100) return false;
   if (/<|>|script|onerror/i.test(concept)) return false;

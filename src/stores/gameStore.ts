@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Connection, GameMode } from '@/types/types';
+import { Connection, GameMode } from '../types/types';
 import { validateConcept } from '@/utils/validation';
 
 interface GameState {

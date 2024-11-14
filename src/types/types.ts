@@ -1,7 +1,21 @@
+// /types/types.ts
+import { FC, ReactNode, ReactElement, ButtonHTMLAttributes, ElementType } from 'react';
+
 // Define the Connection type separately for reusability
 export interface Connection {
   title: string;
   description: string;
+  edge: string;
+}
+
+export interface TooltipProps {
+  /** The content to be displayed in the tooltip */
+  content: ReactNode;
+  /** The element that triggers the tooltip */
+  children: ReactElement;
+  /** Position of the tooltip relative to the trigger element */
+  position?: 'top' | 'bottom' | 'left' | 'right';
+  delay?: number;
 }
 
 export interface IntroductoryCommentary {
@@ -9,10 +23,8 @@ export interface IntroductoryCommentary {
 }
 
 export interface CompletedCommentary {
-    commentary: string;
+    commentary: string;    
 }
-
-
 
 export type ClaudeResponse = 
  {
@@ -43,37 +55,48 @@ export type GameMode =
     | 'Conspiracy Theory'
     | 'AI Choice';
 
+export interface GameModeData {
+  id: GameMode;
+  name: string;
+  description: string;
+  icon: string;
+  isActive?: boolean;
+}
 
+export type ButtonVariant = 'primary' | 'secondary' | 'mode' | 'special';
 
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant: ButtonVariant;
+  icon?: ElementType;
+  isActive?: boolean;
+  className?: string;
+  children: React.ReactNode;
+}
 
-    
-  /*
-  const sampleConnections = [
-    { title: "Coffee", description: "A caffeinated beverage made from roasted coffee beans" },
-    { title: "Brain Chemistry", description: "The complex interaction of neurotransmitters in the brain" },
-    { title: "DNA", description: "The molecule carrying genetic instructions for development" },
-    { title: "Natural Selection", description: "The mechanism of evolutionary adaptation" },
-    { title: "Biodiversity", description: "The variety of life forms in an ecosystem" },
-    { title: "Amazon Rainforest", description: "The world's largest tropical rainforest ecosystem" }
-  ];
+export interface ErrorMessageProps {
+  message?: string;
+  className?: string;
+}
 
-  */
+export interface AnimationConfig {
+  initial: {
+    opacity: number;
+    y: number;
+    scale: number;
+  };
+  animate: {
+    opacity: number;
+    y: number;
+    scale: number;
+  };
+  transition: {
+    duration: number;
+    delay: number;
+    ease: string;
+  };
+} 
 
-  //
-  export interface AnimationConfig {
-    initial: {
-      opacity: number;
-      y: number;
-      scale: number;
-    };
-    animate: {
-      opacity: number;
-      y: number;
-      scale: number;
-    };
-    transition: {
-      duration: number;
-      delay: number;
-      ease: string;
-    };
-  } 
+export interface ValidationState {
+  startConcept: boolean;
+  endConcept: boolean;
+} 

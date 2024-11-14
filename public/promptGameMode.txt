@@ -67,12 +67,12 @@ Here's an example of a desired output where concept 1 is Coffee and concept 2 is
 
 <connections>
 [
-  { "title": "Coffee", "description": "A caffeinated beverage #MdEmojiFoodBeverage# made from roasted coffee beans affects our BRAIN CHEMISTRY" },
-  { "title": "Brain Chemistry", "description": "Our brain chemistry is influenced by DNA" },
-  { "title": "DNA", "description": "DNA #SlChemistry# variations are subject to NATURAL SELECTION" },
-  { "title": "Natural Selection", "description": "Natural selection leads to the diversity of species in BIODIVERSITY" },
-  { "title": "Biodiversity", "description": "Biodiversity #React_Icon_Name# can be found in the AMAZON RAINFOREST" },
-  { "title": "Amazon Rainforest", "description": "a sassy comment about how you made it X amount of steps" }
+  { "title": "Coffee", "description": "A caffeinated beverage #MdEmojiFoodBeverage# made from roasted coffee beans affects our BRAIN CHEMISTRY", "edge": "graph edge verbiage"},
+  { "title": "Brain Chemistry", "description": "Our brain chemistry is influenced by DNA,  "edge": "graph edge verbiage" },
+  { "title": "DNA", "description": "DNA #SlChemistry# variations are subject to NATURAL SELECTION",  "edge": "graph edge verbiage" },
+  { "title": "Natural Selection", "description": "Natural selection leads to the diversity of species in BIODIVERSITY", "edge": "graph edge verbiage" },
+  { "title": "Biodiversity", "description": "Biodiversity #React_Icon_Name# can be found in the AMAZON RAINFOREST", "edge": "graph edge verbiage"},
+  { "title": "Amazon Rainforest", "description": "a sassy comment about how you made it X amount of steps", "edge": "graph edge verbiage" }
 ] 
 </connections>
 

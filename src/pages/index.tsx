@@ -1,7 +1,8 @@
 // pages/index.tsx
 import React, { useState } from 'react';
 import { ConnectionCard } from '../components/ConnectionCard/ConnectionCard';
-import ButtonAreaModes from '../components/DiscoverButton/DiscoverGameModes';
+import CompactChain from '../components/DiscoverButton/CompactChain';
+import ButtonAreaModes from '../components/DiscoverGameModes';
 import { Connection, GameMode } from '../types/types';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { conceptConnectorAPI } from '../services/api';
@@ -25,6 +26,8 @@ export default function ConceptConnector() {
   } = useGameStore();
 
   const { defaultConfig } = useAnimationConfig();
+
+  const [useCompactChain, setUseCompactChain] = useState(true);
 
   const handleDiscover = async () => {
     resetState();
@@ -72,7 +75,7 @@ export default function ConceptConnector() {
         </div>
 
         {/* Replace Input Section with ButtonAreaModes */}
-        <ButtonAreaModes onDiscover={handleDiscover} />
+        <ButtonAreaModes onDiscover={handleDiscover} startConcept={startConcept} endConcept={endConcept} />
      
 
         {/* Loading Spinner */}
@@ -94,17 +97,21 @@ export default function ConceptConnector() {
           <div className="space-y-4">
             <h2 className="text-xl font-bold px-4"/>            
             <div className="space-y-6">
-              {connections.map((connection, index) => (
-                <ConnectionCard
-                  key={index}
-                  number={index + 1}
-                  title={connection.title}
-                  description={connection.description}
-                  isEndpoint={index === 0 || index === connections.length - 1}
-                  animationConfig={defaultConfig}
-                  index={index}
-                />
-              ))}
+              {useCompactChain ? (
+                <CompactChain connections={connections} />
+              ) : (
+                connections.map((connection, index) => (
+                  <ConnectionCard
+                    key={index}
+                    number={index + 1}
+                    title={connection.title}
+                    description={connection.description}
+                    isEndpoint={index === 0 || index === connections.length - 1}
+                    animationConfig={defaultConfig}
+                    index={index}
+                  />
+                ))
+              )}
             </div>
           </div>
         )}

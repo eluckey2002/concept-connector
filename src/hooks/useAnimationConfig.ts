@@ -1,4 +1,4 @@
-import { AnimationConfig } from '@/types/types';
+import { AnimationConfig } from '../types/types';
 
 export const useAnimationConfig = () => {
   const defaultConfig: AnimationConfig = {
